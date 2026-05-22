@@ -10,10 +10,10 @@ platforms = ["linux-64", "osx-arm64"]
 
 [tool.pixi.dependencies]
 python = ">=3.11"
-
-[tool.pixi.pypi-dependencies]
 pyyaml = ">=6.0"
 rich = ">=13.0"
+
+[tool.pixi.pypi-dependencies]
 
 [tool.pixi.tasks]
 scaffold = "python src/scaffold_analysis.py"
