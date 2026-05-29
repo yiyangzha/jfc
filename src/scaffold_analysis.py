@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""Scaffold a new analysis directory with per-phase CLAUDE.md files.
+"""Scaffold a new analysis directory with per-phase CLAUDE.md/AGENTS.md files.
 
 Usage:
     pixi run scaffold analyses/my_analysis --type measurement
     pixi run scaffold analyses/my_analysis --type search
 
-The script creates the directory structure, generates CLAUDE.md files
+The script creates the directory structure, generates CLAUDE.md/AGENTS.md files
 from src/templates/, initializes a git repo, and creates the pixi environment.
 The technique (unfolding, template fit, etc.) is determined during Phase 1,
 not at scaffold time.

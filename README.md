@@ -28,7 +28,7 @@ pixi run scaffold analyses/my_analysis --type measurement
 cd analyses/my_analysis
 # Edit .analysis_config → set data_dir=/path/to/data, add allow= lines
 pixi install
-claude   # pass your physics prompt
+claude/codex   # pass your physics prompt
 ```
 
 ## How it works
@@ -142,6 +142,7 @@ jfc/
     scaffold_analysis.py      Scaffolder
   analyses/                   Each is its own git repo
     <name>/
+      AGENTS.md               Self-contained instructions for the orchestrator
       CLAUDE.md               Self-contained instructions for the orchestrator
       pixi.toml               Environment + task graph
       .analysis_config        data_dir + allow paths
@@ -170,7 +171,7 @@ templates in `src/templates/`:
 7. **Agents symlink** — `agents/` → `../../src/agents/` is created so the
    orchestrator can read agent role definitions.
 
-After scaffolding, the analysis directory is self-contained: its CLAUDE.md
+After scaffolding, the analysis directory is self-contained: its CLAUDE.md/AGENTS.md
 files carry the essential instructions for execution.
 
 ## Requirements

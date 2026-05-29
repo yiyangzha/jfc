@@ -93,20 +93,46 @@ def fix_longtable_short(lines):
         if len(data_lines) >= 15:
             return match.group(0)  # keep as longtable
 
-        # Remove longtable-specific commands
+        # Remove longtable-specific continuation header/footer blocks before
+        # converting to tabular. Pandoc emits \endfirsthead ... \endhead and
+        # \endfoot ... \endlastfoot blocks that are only valid inside
+        # longtable; leaving them in tabular makes LaTeX fail.
         new_body = body
+        new_body = re.sub(
+            r'\\endfirsthead\s*\n?.*?\\endhead\s*\n?',
+            '',
+            new_body,
+            flags=re.DOTALL,
+        )
+        new_body = re.sub(
+            r'\\endfoot\s*\n?.*?\\endlastfoot\s*\n?',
+            '',
+            new_body,
+            flags=re.DOTALL,
+        )
+        new_body = re.sub(
+            r'\\bottomrule\\noalign\{\}\s*\\endlastfoot\s*\n?',
+            '',
+            new_body,
+        )
+        new_body = re.sub(r'\\endfirsthead\s*\n?', '', new_body)
         new_body = re.sub(r'\\endhead\s*\n?', '', new_body)
         new_body = re.sub(r'\\endfoot\s*\n?', '', new_body)
         new_body = re.sub(r'\\endlastfoot\s*\n?', '', new_body)
 
         # Extract caption if present
         caption_match = re.search(
-            r'\\caption\{.*?\}(?:\\label\{[^}]*\})?\\\\',
+            r'\\caption\{.*?\}(?:\\label\{[^}]*\})?(?:\\\\|\\tabularnewline)\s*',
             new_body, re.DOTALL)
         caption = ''
         if caption_match:
-            # Remove trailing \\ from caption line
-            caption = caption_match.group(0).rstrip('\\').rstrip() + '\n'
+            # Remove the longtable row terminator; captions must live outside
+            # the tabular environment after conversion to a table float.
+            caption = re.sub(
+                r'(?:\\\\|\\tabularnewline)\s*$',
+                '',
+                caption_match.group(0),
+            ).rstrip() + '\n'
             new_body = new_body.replace(caption_match.group(0), '')
 
         # Build table float
